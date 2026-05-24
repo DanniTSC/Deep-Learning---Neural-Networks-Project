@@ -1,0 +1,109 @@
+{
+  "raw_dir": "C:\\Users\\tascu\\Desktop\\Proiecte facutlate\\deep learning v\\data\\raw_sample",
+  "csv_files_processed": 6544,
+  "symbols": [
+    "AAPL",
+    "MSFT",
+    "NVDA",
+    "AMZN",
+    "GOOGL"
+  ],
+  "columns": [
+    "Symbol",
+    "Date",
+    "Open",
+    "High",
+    "Low",
+    "Close",
+    "Volume"
+  ],
+  "rows_read": 13327143,
+  "rows_matching_symbols_before_cleaning": 29261,
+  "rows_output": 29261,
+  "rows_dropped_total": 0,
+  "dropped_by_reason": {
+    "missing_required_value": 0,
+    "invalid_date": 0,
+    "invalid_numeric_value": 0,
+    "invalid_price_or_volume": 0,
+    "duplicate_symbol_date": 0
+  },
+  "rows_by_symbol": {
+    "AAPL": {
+      "rows": 6543,
+      "first_date": "2001-01-01",
+      "last_date": "2026-04-27"
+    },
+    "MSFT": {
+      "rows": 6543,
+      "first_date": "2001-01-01",
+      "last_date": "2026-04-27"
+    },
+    "NVDA": {
+      "rows": 6543,
+      "first_date": "2001-01-01",
+      "last_date": "2026-04-27"
+    },
+    "AMZN": {
+      "rows": 6543,
+      "first_date": "2001-01-01",
+      "last_date": "2026-04-27"
+    },
+    "GOOGL": {
+      "rows": 3089,
+      "first_date": "2014-04-03",
+      "last_date": "2026-04-27"
+    }
+  },
+  "processed_csv_validation": {
+    "status": "passed",
+    "rows_validated": 29261,
+    "symbols": [
+      "AAPL",
+      "AMZN",
+      "GOOGL",
+      "MSFT",
+      "NVDA"
+    ],
+    "rows_by_symbol": {
+      "AAPL": 6543,
+      "AMZN": 6543,
+      "GOOGL": 3089,
+      "MSFT": 6543,
+      "NVDA": 6543
+    },
+    "first_date_by_symbol": {
+      "AAPL": "2001-01-01",
+      "AMZN": "2001-01-01",
+      "GOOGL": "2014-04-03",
+      "MSFT": "2001-01-01",
+      "NVDA": "2001-01-01"
+    },
+    "last_date_by_symbol": {
+      "AAPL": "2026-04-27",
+      "AMZN": "2026-04-27",
+      "GOOGL": "2026-04-27",
+      "MSFT": "2026-04-27",
+      "NVDA": "2026-04-27"
+    },
+    "checks": [
+      "columns",
+      "required_values",
+      "expected_symbols",
+      "duplicate_symbol_date",
+      "iso_date",
+      "positive_prices",
+      "high_greater_or_equal_low",
+      "non_negative_volume"
+    ]
+  },
+  "output_files": {
+    "processed_csv": "C:\\Users\\tascu\\Desktop\\Proiecte facutlate\\deep learning v\\data\\processed\\processed_nasdaq.csv",
+    "summary_json": "C:\\Users\\tascu\\Desktop\\Proiecte facutlate\\deep learning v\\outputs\\metrics\\preprocessing_summary.json",
+    "figures": [
+      "C:\\Users\\tascu\\Desktop\\Proiecte facutlate\\deep learning v\\outputs\\figures\\close_price_evolution.svg",
+      "C:\\Users\\tascu\\Desktop\\Proiecte facutlate\\deep learning v\\outputs\\figures\\average_volume_by_symbol.svg",
+      "C:\\Users\\tascu\\Desktop\\Proiecte facutlate\\deep learning v\\outputs\\figures\\observations_by_symbol.svg"
+    ]
+  }
+}

@@ -1,0 +1,103 @@
+Rețele neuronale și tehnici de Deep Learning – cerințe proiect de echipă
+
+Ca date de intrare va fi utilizat unul dintre seturile de date cu privire la datele istorice de tranzacționare de pe NASDAQ (National Association of Securities Dealers Automated Quotations) sau NYSE (New York Stock Exchange).
+
+A se consulta și secțiunea Resurse seminar de pe platforma online.ase.ro
+
+Seturile de date sunt organizate în fișiere text de tip .CSV, câte un fișier pentru fiecare zi de tranzacționare, începând din 1.01.2001 până la 24.04.2026. Fiecare fișier conține pe linii datele înregistrate într-o zi de tranzacționare pentru companiile listate pe fiecare piață. Structura fișierelor este descrisă în tabelul de mai jos. Cele două seturi de date au o organizare similară.
+
+Coloană
+
+Tip
+
+Semnificație
+
+Symbol
+
+text
+
+tickerul instrumentului (acțiune, simbolul companiei tranzacționate)
+
+Date
+
+text dd-Mon-YYYY
+
+data tranzacționării – constantă într-un fișier
+
+Open
+
+float
+
+preț de deschidere (USD)
+
+High
+
+float
+
+preț maxim intraday
+
+Low
+
+float
+
+preț minim intraday
+
+Close
+
+float
+
+preț de închidere
+
+Volume
+
+int
+
+număr de acțiuni tranzacționate
+
+ 
+
+Cerințe:
+
+ - Proiectul este unul de echipă (3-5 membri).
+
+- Fiecare echipă va alege și va lucra cu un singur set de date.
+
+- Scopul proiectului este de a concepe și implementa algoritmi de predicție utilizând modele de rețele neuronale.
+
+- Predicția poate să vizeze variabilele de preț conținute în datele istorice de intrare sau indicatori calculați pe baza acestor date de intrare.
+
+- Predicția poate fi făcută pentru o singură zi în viitor, sau pentru o secvență de zile, de exemplu: 5, 10, 20, 30, 60 de zile.
+
+- Predicția variabilelor de intrare sau a indicatorilor calculați pe baza acestora se poate realiza atât longitudinal pentru un anumit simbol sau grup de simboluri (de la o zi la alta), cât și utilizând indicatori transversali (pe baza datelor de tranzacționare dintr-o zi pentru toate simbolurile).
+
+- Predicția se poate concepe pentru variabilă țintă de tip continuu: preț, estimatori de volatilitate, entropie etc. sau pentru o variabilă țintă de tip categorial, de exemplu, schimbarea regimului randamentului sau a volatilității de la o zi la alta: 1 creștere, -1 descreștere.
+
+- Seriile de timp de intrare pot fi folosite una câte una pentru modelul de predicție, sau pot fi utilizate multiple variabile de intrare pentru a prezice valorile viitoare ale unei singure variabile țintă.
+
+- Soluția este implementată în limbajul de programare Python și este livrată ca proiect Pycharm, constând din următoarele componente:
+
+a) un document MS Word ce descrie proiectul și care conține următoarele:
+
+1.     Abordarea privind prelucrarea datelor istorice pentru a satisface nevoile modelului de perdiție avut în vedere.
+
+2.     Motivația de a opta pentru o anumit model de predicție, preprocesarea datelor de intrare, calculul unor indicatori pentru predicție.
+
+3.     Prezentarea rezultatelor: grafice, tabele.
+
+4.     Interpretare cu privire la funcțiile de estimare a pierderii utilizate și a acurateței.
+
+5.     Discuții și concluzii.
+
+c) Fișierele codului sursă Python (generate graficele generate din cod)
+
+d) Fișiere cu date de ieșire
+
+Sunt urmărite și notate următoarele aspecte ale proiectului: stabilirea precisă a obiectivului predicției, motivarea alegerii variabilelor și/sau indicatorilor de intrare calculați pe baza seturilor de date de intrare, metodologia de preprocesare a datelor, abordarea sistematică în ceea ce privește îmbunătățirea iterativă a rezultatelor predicției.
+
+Proiectul va fi încărcat de unul dintre membrii echipei pe platforma online.ase.ro, folosind credențialele instituționale, ca un singur fișier de arhivă:
+
+nume_echipa_grupa.zip
+
+Pentru a putea fi încărcate toate proiectele echipelor pe platforma online.ase.ro (există o limită de 50 MB pentru un assignment), dimensiunea maximă pentru întregul fișier arhivă nu trebuie să depășească 5 MB.
+
+ 

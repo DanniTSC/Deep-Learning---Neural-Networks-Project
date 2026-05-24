@@ -1,0 +1,33 @@
+# Python environments
+venv/
+.venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# IDE and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Large raw input data
+data/raw_sample/*
+!data/raw_sample/.gitkeep
+
+# Model artifacts that can become large
+*.h5
+*.keras
+*.pt
+*.pth
+*.onnx
+*.pkl
+*.joblib
+
+# Temporary files
+*.tmp
+*.log
+~$*.docx
