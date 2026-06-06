@@ -1,148 +1,173 @@
 from __future__ import annotations
 
-from collections import defaultdict
-from datetime import date
 from html import escape
 from pathlib import Path
-from typing import Any
+
+import pandas as pd
+
+from src.config import TARGET_COLUMN
 
 
-COLORS = {
-    "AAPL": "#2563eb",
-    "MSFT": "#16a34a",
-    "NVDA": "#9333ea",
-    "AMZN": "#ea580c",
-    "GOOGL": "#dc2626",
-}
-
-
-def write_data_quality_figures(rows: list[dict[str, Any]], output_dir: Path) -> list[Path]:
+def write_project_figures(
+    features_csv_path: Path,
+    output_dir: Path,
+    target_column: str = TARGET_COLUMN,
+) -> list[Path]:
     output_dir.mkdir(parents=True, exist_ok=True)
+    data = pd.read_csv(features_csv_path, parse_dates=["Date"])
 
     figure_paths = [
-        output_dir / "close_price_evolution.svg",
-        output_dir / "average_volume_by_symbol.svg",
-        output_dir / "observations_by_symbol.svg",
+        output_dir / "data_quality_observations_by_symbol.svg",
+        output_dir / "target_future_drawdown_distribution.svg",
+        output_dir / "target_average_drawdown_by_symbol.svg",
+        output_dir / "target_drawdown_over_time.svg",
     ]
 
-    _write_close_price_evolution(rows, figure_paths[0])
-    _write_average_volume_by_symbol(rows, figure_paths[1])
-    _write_observations_by_symbol(rows, figure_paths[2])
+    _write_observations_by_symbol(data, figure_paths[0])
+    _write_target_distribution(data, target_column, figure_paths[1])
+    _write_average_drawdown_by_symbol(data, target_column, figure_paths[2])
+    _write_target_over_time(data, target_column, figure_paths[3])
 
     return figure_paths
 
 
-def _write_close_price_evolution(rows: list[dict[str, Any]], output_path: Path) -> None:
-    grouped: dict[str, list[tuple[date, float]]] = defaultdict(list)
-    for row in rows:
-        grouped[row["Symbol"]].append((date.fromisoformat(row["Date"]), float(row["Close"])))
+def _write_observations_by_symbol(data: pd.DataFrame, output_path: Path) -> None:
+    values = data.groupby("Symbol").size().sort_values(ascending=True)
+    _write_horizontal_bar_chart(
+        output_path=output_path,
+        title="Observatii disponibile pentru modelare pe simbol",
+        values=values,
+        value_formatter=lambda value: _format_number(value),
+        color="#2563eb",
+    )
 
-    all_dates = [point_date for points in grouped.values() for point_date, _ in points]
-    all_values = [close for points in grouped.values() for _, close in points]
-    min_date, max_date = min(all_dates), max(all_dates)
-    min_close, max_close = min(all_values), max(all_values)
 
-    width, height = 1100, 650
-    left, top, plot_width, plot_height = 85, 60, 880, 480
+def _write_average_drawdown_by_symbol(
+    data: pd.DataFrame,
+    target_column: str,
+    output_path: Path,
+) -> None:
+    values = (data.groupby("Symbol")[target_column].mean() * 100).sort_values(ascending=True)
+    _write_horizontal_bar_chart(
+        output_path=output_path,
+        title="Drawdown viitor mediu pe simbol",
+        values=values,
+        value_formatter=lambda value: f"{value:.2f}%",
+        color="#dc2626",
+    )
+
+
+def _write_target_distribution(
+    data: pd.DataFrame,
+    target_column: str,
+    output_path: Path,
+) -> None:
+    target_pct = data[target_column] * 100
+    bins = 30
+    counts = pd.cut(target_pct, bins=bins).value_counts(sort=False)
+    max_count = int(counts.max())
+
+    width, height = 1050, 620
+    left, top, plot_width, plot_height = 90, 70, 850, 410
     bottom = top + plot_height
+    bar_gap = 3
+    bar_width = (plot_width - bar_gap * (bins - 1)) / bins
 
-    lines = [_svg_header(width, height, "Evolutia pretului Close")]
+    lines = [_svg_header(width, height, "Distributia targetului future max drawdown 10d")]
     lines.append(_axis(left, top, plot_width, plot_height))
-    lines.append(_text(35, 38, "Evolutia pretului Close", 24, "bold"))
-    lines.append(_text(left, bottom + 45, min_date.isoformat(), 13))
-    lines.append(_text(left + plot_width - 80, bottom + 45, max_date.isoformat(), 13))
-    lines.append(_text(18, top + 12, f"{max_close:,.2f}", 12))
-    lines.append(_text(18, bottom, f"{min_close:,.2f}", 12))
+    lines.append(_text(35, 42, "Distributia targetului future max drawdown 10d", 24, "bold"))
+    lines.append(_text(left, bottom + 46, f"{target_pct.min():.1f}%", 13))
+    lines.append(_text(left + plot_width - 55, bottom + 46, f"{target_pct.max():.1f}%", 13))
+    lines.append(_text(25, top + 10, _format_number(max_count), 12))
+    lines.append(_text(42, bottom, "0", 12))
+    lines.append(_text(left + 300, height - 34, "Drawdown maxim viitor pe 10 zile (%)", 14))
 
-    for index, (symbol, points) in enumerate(sorted(grouped.items())):
-        color = COLORS.get(symbol, "#334155")
-        point_pairs = []
-        for point_date, close in points:
-            x = _scale(point_date.toordinal(), min_date.toordinal(), max_date.toordinal(), left, left + plot_width)
-            y = _scale(close, min_close, max_close, bottom, top)
-            point_pairs.append(f"{x:.2f},{y:.2f}")
-
+    for index, count in enumerate(counts):
+        x = left + index * (bar_width + bar_gap)
+        bar_height = _scale(float(count), 0, max_count, 0, plot_height)
+        y = bottom - bar_height
         lines.append(
-            f'<polyline fill="none" stroke="{color}" stroke-width="1.5" '
-            f'points="{" ".join(point_pairs)}" />'
+            f'<rect x="{x:.2f}" y="{y:.2f}" width="{bar_width:.2f}" '
+            f'height="{bar_height:.2f}" fill="#0f766e" />'
         )
-        legend_y = top + 8 + index * 25
-        lines.append(f'<rect x="990" y="{legend_y - 10}" width="14" height="14" fill="{color}" />')
-        lines.append(_text(1012, legend_y + 2, symbol, 14))
 
     lines.append("</svg>")
     output_path.write_text("\n".join(lines), encoding="utf-8")
 
 
-def _write_average_volume_by_symbol(rows: list[dict[str, Any]], output_path: Path) -> None:
-    totals: dict[str, int] = defaultdict(int)
-    counts: dict[str, int] = defaultdict(int)
-    for row in rows:
-        symbol = row["Symbol"]
-        totals[symbol] += int(row["Volume"])
-        counts[symbol] += 1
+def _write_target_over_time(
+    data: pd.DataFrame,
+    target_column: str,
+    output_path: Path,
+) -> None:
+    series = (data.groupby("Date")[target_column].mean() * 100).sort_index()
+    dates = series.index
+    values = series.to_numpy()
+    min_date, max_date = dates.min(), dates.max()
+    min_value, max_value = float(values.min()), float(values.max())
 
-    averages = {symbol: totals[symbol] / counts[symbol] for symbol in counts}
-    _write_bar_chart(
-        output_path=output_path,
-        title="Volum mediu tranzactionat pe simbol",
-        values=averages,
-        value_suffix="",
+    width, height = 1100, 650
+    left, top, plot_width, plot_height = 90, 70, 860, 430
+    bottom = top + plot_height
+
+    lines = [_svg_header(width, height, "Drawdown viitor mediu in timp")]
+    lines.append(_axis(left, top, plot_width, plot_height))
+    lines.append(_text(35, 42, "Drawdown viitor mediu in timp", 24, "bold"))
+    lines.append(_text(left, bottom + 46, min_date.date().isoformat(), 13))
+    lines.append(_text(left + plot_width - 85, bottom + 46, max_date.date().isoformat(), 13))
+    lines.append(_text(20, top + 10, f"{max_value:.2f}%", 12))
+    lines.append(_text(20, bottom, f"{min_value:.2f}%", 12))
+    lines.append(_text(left + 315, height - 34, "Data observatiei", 14))
+
+    points = []
+    for point_date, value in series.items():
+        x = _scale(
+            float(point_date.toordinal()),
+            float(min_date.toordinal()),
+            float(max_date.toordinal()),
+            left,
+            left + plot_width,
+        )
+        y = _scale(float(value), min_value, max_value, bottom, top)
+        points.append(f"{x:.2f},{y:.2f}")
+
+    lines.append(
+        f'<polyline fill="none" stroke="#7c3aed" stroke-width="1.8" '
+        f'points="{" ".join(points)}" />'
     )
 
-
-def _write_observations_by_symbol(rows: list[dict[str, Any]], output_path: Path) -> None:
-    counts: dict[str, int] = defaultdict(int)
-    for row in rows:
-        counts[row["Symbol"]] += 1
-
-    _write_bar_chart(
-        output_path=output_path,
-        title="Numar de observatii pe simbol",
-        values=dict(counts),
-        value_suffix=" randuri",
-    )
+    lines.append("</svg>")
+    output_path.write_text("\n".join(lines), encoding="utf-8")
 
 
-def _write_bar_chart(
+def _write_horizontal_bar_chart(
     output_path: Path,
     title: str,
-    values: dict[str, float | int],
-    value_suffix: str,
+    values: pd.Series,
+    value_formatter,
+    color: str,
 ) -> None:
-    width, height = 950, 560
-    left, top, plot_width, plot_height = 85, 65, 760, 380
-    bottom = top + plot_height
-    max_value = max(values.values()) if values else 1
-    symbols = sorted(values)
-    bar_gap = 28
-    bar_width = (plot_width - bar_gap * (len(symbols) + 1)) / max(len(symbols), 1)
+    row_height = 22
+    width = 1120
+    height = 115 + len(values) * row_height
+    left, top, plot_width = 145, 65, 780
+    max_value = float(values.max()) if len(values) else 1.0
 
     lines = [_svg_header(width, height, title)]
-    lines.append(_axis(left, top, plot_width, plot_height))
-    lines.append(_text(35, 38, title, 24, "bold"))
-    lines.append(_text(18, top + 12, _format_number(max_value), 12))
-    lines.append(_text(42, bottom, "0", 12))
+    lines.append(_text(35, 42, title, 24, "bold"))
+    lines.append(
+        f'<line x1="{left}" y1="{top - 10}" x2="{left}" y2="{height - 50}" stroke="#334155" />'
+    )
 
-    for index, symbol in enumerate(symbols):
-        value = values[symbol]
-        x = left + bar_gap + index * (bar_width + bar_gap)
-        bar_height = _scale(value, 0, max_value, 0, plot_height)
-        y = bottom - bar_height
-        color = COLORS.get(symbol, "#334155")
+    for index, (symbol, value) in enumerate(values.items()):
+        y = top + index * row_height
+        bar_width = _scale(float(value), 0, max_value, 0, plot_width)
+        lines.append(_text(35, y + 13, str(symbol), 12))
         lines.append(
-            f'<rect x="{x:.2f}" y="{y:.2f}" width="{bar_width:.2f}" '
-            f'height="{bar_height:.2f}" fill="{color}" />'
+            f'<rect x="{left}" y="{y:.2f}" width="{bar_width:.2f}" '
+            f'height="14" fill="{color}" />'
         )
-        lines.append(_text(x + bar_width / 2 - 18, bottom + 28, symbol, 14))
-        lines.append(
-            _text(
-                x + bar_width / 2 - 42,
-                y - 10,
-                f"{_format_number(value)}{value_suffix}",
-                12,
-            )
-        )
+        lines.append(_text(left + bar_width + 8, y + 12, value_formatter(float(value)), 11))
 
     lines.append("</svg>")
     output_path.write_text("\n".join(lines), encoding="utf-8")
@@ -192,26 +217,3 @@ def _format_number(value: float | int) -> str:
     if abs(value) >= 1_000:
         return f"{value / 1_000:.1f}K"
     return f"{value:,.0f}"
-
-
-def plot_close_prices(df, output_dir: Path) -> list[Path]:
-    import matplotlib.pyplot as plt
-
-    output_dir.mkdir(parents=True, exist_ok=True)
-    saved_paths: list[Path] = []
-
-    for symbol, symbol_df in df.groupby("Symbol"):
-        fig, ax = plt.subplots(figsize=(10, 5))
-        ax.plot(symbol_df["Date"], symbol_df["Close"])
-        ax.set_title(f"Close price - {symbol}")
-        ax.set_xlabel("Date")
-        ax.set_ylabel("Close")
-        ax.grid(True, alpha=0.3)
-        fig.autofmt_xdate()
-
-        output_path = output_dir / f"{symbol.lower()}_close_price.png"
-        fig.savefig(output_path, dpi=150, bbox_inches="tight")
-        plt.close(fig)
-        saved_paths.append(output_path)
-
-    return saved_paths

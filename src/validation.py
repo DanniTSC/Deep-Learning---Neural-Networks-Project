@@ -6,7 +6,10 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
-from src.config import PRICE_COLUMNS, REQUIRED_COLUMNS
+import pandas as pd
+
+from src.config import PRICE_COLUMNS, REQUIRED_COLUMNS, TARGET_COLUMN
+from src.indicators import FEATURE_COLUMNS, FEATURE_TARGET_COLUMNS
 
 
 def validate_processed_csv(
@@ -77,6 +80,85 @@ def validate_processed_csv(
             "positive_prices",
             "high_greater_or_equal_low",
             "non_negative_volume",
+        ],
+    }
+
+
+def validate_features_targets_csv(
+    csv_path: Path,
+    expected_symbols: list[str] | tuple[str, ...],
+    target_column: str = TARGET_COLUMN,
+) -> dict[str, Any]:
+    if not csv_path.exists():
+        raise FileNotFoundError(f"Features/targets CSV does not exist: {csv_path}")
+
+    data = pd.read_csv(csv_path)
+    expected_columns = list(FEATURE_TARGET_COLUMNS)
+    if list(data.columns) != expected_columns:
+        raise ValueError(
+            f"Invalid columns in {csv_path}: {list(data.columns)}. "
+            f"Expected: {expected_columns}"
+        )
+
+    expected_symbol_set = {symbol.upper().strip() for symbol in expected_symbols}
+    actual_symbol_set = set(data["Symbol"].astype(str).str.upper().str.strip())
+    unexpected_symbols = sorted(actual_symbol_set - expected_symbol_set)
+    if unexpected_symbols:
+        raise ValueError(f"Unexpected symbols in features/targets CSV: {unexpected_symbols}")
+
+    missing_symbols = sorted(expected_symbol_set - actual_symbol_set)
+    if missing_symbols:
+        raise ValueError(f"Missing symbols from features/targets CSV: {missing_symbols}")
+
+    if data.duplicated(["Symbol", "Date"]).any():
+        duplicate_rows = data.loc[data.duplicated(["Symbol", "Date"], keep=False), ["Symbol", "Date"]]
+        raise ValueError(
+            "Duplicate Symbol + Date rows in features/targets CSV: "
+            f"{duplicate_rows.head(5).to_dict(orient='records')}"
+        )
+
+    data["Date"] = pd.to_datetime(data["Date"], errors="raise")
+    numeric_columns = ["Open", "High", "Low", "Close", "Volume", *FEATURE_COLUMNS, target_column]
+    numeric_data = data[numeric_columns].apply(pd.to_numeric, errors="raise")
+    if numeric_data.isna().any().any():
+        columns_with_nan = numeric_data.columns[numeric_data.isna().any()].tolist()
+        raise ValueError(f"NaN values found in features/targets columns: {columns_with_nan}")
+
+    if (numeric_data[target_column] < 0).any():
+        raise ValueError(f"Negative values found in regression target {target_column!r}")
+
+    rows_by_symbol = data.groupby("Symbol").size().sort_index().to_dict()
+    first_date_by_symbol = (
+        data.groupby("Symbol")["Date"].min().dt.date.astype(str).sort_index().to_dict()
+    )
+    last_date_by_symbol = (
+        data.groupby("Symbol")["Date"].max().dt.date.astype(str).sort_index().to_dict()
+    )
+    target = numeric_data[target_column]
+
+    return {
+        "status": "passed",
+        "rows_validated": int(len(data)),
+        "symbols": sorted(actual_symbol_set),
+        "rows_by_symbol": {symbol: int(rows) for symbol, rows in rows_by_symbol.items()},
+        "first_date_by_symbol": first_date_by_symbol,
+        "last_date_by_symbol": last_date_by_symbol,
+        "target_column": target_column,
+        "target_summary": {
+            "min": float(target.min()),
+            "mean": float(target.mean()),
+            "median": float(target.median()),
+            "max": float(target.max()),
+            "zero_target_share": float((target == 0).mean()),
+        },
+        "checks": [
+            "columns",
+            "expected_symbols",
+            "duplicate_symbol_date",
+            "iso_date",
+            "numeric_features",
+            "no_nan_features_or_target",
+            "non_negative_regression_target",
         ],
     }
 

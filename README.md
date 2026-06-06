@@ -51,13 +51,17 @@ python main.py
 
 Rularea citește mii de fișiere CSV zilnice și poate dura aproximativ 1-2 minute. Scriptul afișează progres periodic în consolă.
 
-Comanda implicită filtrează simbolurile:
+Comanda implicită filtrează cele 50 de simboluri NASDAQ configurate în `src/config.py`:
 
 ```text
-AAPL, MSFT, NVDA, AMZN, GOOGL
+NVDA, AAPL, MSFT, AMZN, GOOGL, GOOG, AVGO, META, TSLA, MU,
+WMT, AMD, ASML, INTC, CSCO, COST, LRCX, ARM, AMAT, NFLX,
+PLTR, TXN, KLAC, LIN, SNDK, MRVL, QCOM, PANW, ADI, PEP,
+TMUS, STX, AMGN, APP, WDC, CRWD, GILD, ISRG, SHOP, HON,
+BKNG, PDD, VRTX, SBUX, FTNT, CDNS, MAR, ADBE, ADP, CEG
 ```
 
-Poți schimba simbolurile astfel:
+Poți schimba simbolurile pentru o rulare custom astfel:
 
 ```powershell
 python main.py --symbols AAPL MSFT NVDA AMZN GOOGL
@@ -76,10 +80,13 @@ python validate_processed.py
 Pipeline-ul generează:
 
 - `data/processed/processed_nasdaq.csv`
+- `data/processed/features_targets_nasdaq.csv`
 - `outputs/metrics/preprocessing_summary.json`
-- `outputs/figures/close_price_evolution.svg`
-- `outputs/figures/average_volume_by_symbol.svg`
-- `outputs/figures/observations_by_symbol.svg`
+- `outputs/metrics/features_targets_summary.json`
+- `outputs/figures/data_quality_observations_by_symbol.svg`
+- `outputs/figures/target_future_drawdown_distribution.svg`
+- `outputs/figures/target_average_drawdown_by_symbol.svg`
+- `outputs/figures/target_drawdown_over_time.svg`
 
 Datasetul procesat păstrează coloanele:
 
