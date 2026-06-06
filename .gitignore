@@ -17,6 +17,7 @@ Thumbs.db
 # Large raw input data
 data/raw_sample/*
 !data/raw_sample/.gitkeep
+data/processed/features_targets_nasdaq.csv
 
 # Model artifacts that can become large
 *.h5
