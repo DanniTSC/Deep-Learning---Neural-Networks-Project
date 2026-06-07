@@ -1,0 +1,534 @@
+{
+  "source_rows": 222611,
+  "rows_output": 212433,
+  "rows_dropped_for_features_or_target": 10178,
+  "target_column": "future_max_drawdown_10d",
+  "target_horizon_days": 10,
+  "feature_columns": [
+    "daily_return",
+    "log_return_1d",
+    "return_5d",
+    "return_10d",
+    "return_20d",
+    "intraday_range",
+    "open_close_return",
+    "volume_change_1d",
+    "volume_ratio_20d",
+    "sma_5",
+    "sma_10",
+    "sma_20",
+    "sma_60",
+    "ma_5_ratio",
+    "ma_20_ratio",
+    "ma_60_ratio",
+    "volatility_5d",
+    "volatility_10d",
+    "volatility_20d",
+    "volatility_60d",
+    "past_max_drawdown_10d",
+    "past_max_drawdown_20d",
+    "past_max_drawdown_60d",
+    "return_lag_1",
+    "return_lag_2",
+    "return_lag_3",
+    "return_lag_5"
+  ],
+  "rows_by_symbol": {
+    "AAPL": {
+      "rows": 6267,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "ADBE": {
+      "rows": 6267,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "ADI": {
+      "rows": 6267,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "ADP": {
+      "rows": 6266,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "AMAT": {
+      "rows": 6267,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "AMD": {
+      "rows": 6267,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "AMGN": {
+      "rows": 6266,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "AMZN": {
+      "rows": 6267,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "APP": {
+      "rows": 1168,
+      "first_date": "2021-07-08",
+      "last_date": "2026-04-13"
+    },
+    "ARM": {
+      "rows": 586,
+      "first_date": "2023-12-08",
+      "last_date": "2026-04-13"
+    },
+    "ASML": {
+      "rows": 6247,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "AVGO": {
+      "rows": 4109,
+      "first_date": "2009-10-29",
+      "last_date": "2026-04-13"
+    },
+    "BKNG": {
+      "rows": 1955,
+      "first_date": "2018-05-22",
+      "last_date": "2026-04-13"
+    },
+    "CDNS": {
+      "rows": 5059,
+      "first_date": "2006-01-19",
+      "last_date": "2026-04-13"
+    },
+    "CEG": {
+      "rows": 993,
+      "first_date": "2022-04-27",
+      "last_date": "2026-04-13"
+    },
+    "COST": {
+      "rows": 6267,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "CRWD": {
+      "rows": 1631,
+      "first_date": "2019-09-04",
+      "last_date": "2026-04-13"
+    },
+    "CSCO": {
+      "rows": 6267,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "FTNT": {
+      "rows": 4038,
+      "first_date": "2010-02-10",
+      "last_date": "2026-04-13"
+    },
+    "GILD": {
+      "rows": 6263,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "GOOG": {
+      "rows": 5355,
+      "first_date": "2004-11-11",
+      "last_date": "2026-04-13"
+    },
+    "GOOGL": {
+      "rows": 2938,
+      "first_date": "2014-06-26",
+      "last_date": "2026-04-13"
+    },
+    "HON": {
+      "rows": 1150,
+      "first_date": "2021-08-03",
+      "last_date": "2026-04-13"
+    },
+    "INTC": {
+      "rows": 6267,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "ISRG": {
+      "rows": 6267,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "KLAC": {
+      "rows": 6267,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "LIN": {
+      "rows": 548,
+      "first_date": "2024-02-05",
+      "last_date": "2026-04-13"
+    },
+    "LRCX": {
+      "rows": 6267,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "MAR": {
+      "rows": 3051,
+      "first_date": "2014-01-13",
+      "last_date": "2026-04-13"
+    },
+    "META": {
+      "rows": 905,
+      "first_date": "2022-09-01",
+      "last_date": "2026-04-13"
+    },
+    "MRVL": {
+      "rows": 6267,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "MSFT": {
+      "rows": 6267,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "MU": {
+      "rows": 6266,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "NFLX": {
+      "rows": 5919,
+      "first_date": "2002-08-15",
+      "last_date": "2026-04-13"
+    },
+    "NVDA": {
+      "rows": 6267,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "PANW": {
+      "rows": 1034,
+      "first_date": "2022-02-28",
+      "last_date": "2026-04-13"
+    },
+    "PDD": {
+      "rows": 1851,
+      "first_date": "2018-10-18",
+      "last_date": "2026-04-13"
+    },
+    "PEP": {
+      "rows": 2003,
+      "first_date": "2018-03-14",
+      "last_date": "2026-04-13"
+    },
+    "PLTR": {
+      "rows": 282,
+      "first_date": "2025-02-26",
+      "last_date": "2026-04-13"
+    },
+    "QCOM": {
+      "rows": 6267,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "SBUX": {
+      "rows": 6266,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "SHOP": {
+      "rows": 202,
+      "first_date": "2025-06-24",
+      "last_date": "2026-04-13"
+    },
+    "SNDK": {
+      "rows": 225,
+      "first_date": "2025-05-20",
+      "last_date": "2026-04-13"
+    },
+    "STX": {
+      "rows": 4333,
+      "first_date": "2008-12-09",
+      "last_date": "2026-04-13"
+    },
+    "TMUS": {
+      "rows": 2544,
+      "first_date": "2016-01-20",
+      "last_date": "2026-04-13"
+    },
+    "TSLA": {
+      "rows": 3884,
+      "first_date": "2010-09-21",
+      "last_date": "2026-04-13"
+    },
+    "TXN": {
+      "rows": 6267,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "VRTX": {
+      "rows": 6265,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "WDC": {
+      "rows": 6267,
+      "first_date": "2001-03-26",
+      "last_date": "2026-04-13"
+    },
+    "WMT": {
+      "rows": 25,
+      "first_date": "2026-03-09",
+      "last_date": "2026-04-13"
+    }
+  },
+  "target_summary": {
+    "min": -0.0,
+    "mean": 0.03948609413664939,
+    "median": 0.02372034956304614,
+    "max": 0.9605598629909547,
+    "zero_target_share": 0.20598965320830567
+  },
+  "features_targets_csv_validation": {
+    "status": "passed",
+    "rows_validated": 212433,
+    "symbols": [
+      "AAPL",
+      "ADBE",
+      "ADI",
+      "ADP",
+      "AMAT",
+      "AMD",
+      "AMGN",
+      "AMZN",
+      "APP",
+      "ARM",
+      "ASML",
+      "AVGO",
+      "BKNG",
+      "CDNS",
+      "CEG",
+      "COST",
+      "CRWD",
+      "CSCO",
+      "FTNT",
+      "GILD",
+      "GOOG",
+      "GOOGL",
+      "HON",
+      "INTC",
+      "ISRG",
+      "KLAC",
+      "LIN",
+      "LRCX",
+      "MAR",
+      "META",
+      "MRVL",
+      "MSFT",
+      "MU",
+      "NFLX",
+      "NVDA",
+      "PANW",
+      "PDD",
+      "PEP",
+      "PLTR",
+      "QCOM",
+      "SBUX",
+      "SHOP",
+      "SNDK",
+      "STX",
+      "TMUS",
+      "TSLA",
+      "TXN",
+      "VRTX",
+      "WDC",
+      "WMT"
+    ],
+    "rows_by_symbol": {
+      "AAPL": 6267,
+      "ADBE": 6267,
+      "ADI": 6267,
+      "ADP": 6266,
+      "AMAT": 6267,
+      "AMD": 6267,
+      "AMGN": 6266,
+      "AMZN": 6267,
+      "APP": 1168,
+      "ARM": 586,
+      "ASML": 6247,
+      "AVGO": 4109,
+      "BKNG": 1955,
+      "CDNS": 5059,
+      "CEG": 993,
+      "COST": 6267,
+      "CRWD": 1631,
+      "CSCO": 6267,
+      "FTNT": 4038,
+      "GILD": 6263,
+      "GOOG": 5355,
+      "GOOGL": 2938,
+      "HON": 1150,
+      "INTC": 6267,
+      "ISRG": 6267,
+      "KLAC": 6267,
+      "LIN": 548,
+      "LRCX": 6267,
+      "MAR": 3051,
+      "META": 905,
+      "MRVL": 6267,
+      "MSFT": 6267,
+      "MU": 6266,
+      "NFLX": 5919,
+      "NVDA": 6267,
+      "PANW": 1034,
+      "PDD": 1851,
+      "PEP": 2003,
+      "PLTR": 282,
+      "QCOM": 6267,
+      "SBUX": 6266,
+      "SHOP": 202,
+      "SNDK": 225,
+      "STX": 4333,
+      "TMUS": 2544,
+      "TSLA": 3884,
+      "TXN": 6267,
+      "VRTX": 6265,
+      "WDC": 6267,
+      "WMT": 25
+    },
+    "first_date_by_symbol": {
+      "AAPL": "2001-03-26",
+      "ADBE": "2001-03-26",
+      "ADI": "2001-03-26",
+      "ADP": "2001-03-26",
+      "AMAT": "2001-03-26",
+      "AMD": "2001-03-26",
+      "AMGN": "2001-03-26",
+      "AMZN": "2001-03-26",
+      "APP": "2021-07-08",
+      "ARM": "2023-12-08",
+      "ASML": "2001-03-26",
+      "AVGO": "2009-10-29",
+      "BKNG": "2018-05-22",
+      "CDNS": "2006-01-19",
+      "CEG": "2022-04-27",
+      "COST": "2001-03-26",
+      "CRWD": "2019-09-04",
+      "CSCO": "2001-03-26",
+      "FTNT": "2010-02-10",
+      "GILD": "2001-03-26",
+      "GOOG": "2004-11-11",
+      "GOOGL": "2014-06-26",
+      "HON": "2021-08-03",
+      "INTC": "2001-03-26",
+      "ISRG": "2001-03-26",
+      "KLAC": "2001-03-26",
+      "LIN": "2024-02-05",
+      "LRCX": "2001-03-26",
+      "MAR": "2014-01-13",
+      "META": "2022-09-01",
+      "MRVL": "2001-03-26",
+      "MSFT": "2001-03-26",
+      "MU": "2001-03-26",
+      "NFLX": "2002-08-15",
+      "NVDA": "2001-03-26",
+      "PANW": "2022-02-28",
+      "PDD": "2018-10-18",
+      "PEP": "2018-03-14",
+      "PLTR": "2025-02-26",
+      "QCOM": "2001-03-26",
+      "SBUX": "2001-03-26",
+      "SHOP": "2025-06-24",
+      "SNDK": "2025-05-20",
+      "STX": "2008-12-09",
+      "TMUS": "2016-01-20",
+      "TSLA": "2010-09-21",
+      "TXN": "2001-03-26",
+      "VRTX": "2001-03-26",
+      "WDC": "2001-03-26",
+      "WMT": "2026-03-09"
+    },
+    "last_date_by_symbol": {
+      "AAPL": "2026-04-13",
+      "ADBE": "2026-04-13",
+      "ADI": "2026-04-13",
+      "ADP": "2026-04-13",
+      "AMAT": "2026-04-13",
+      "AMD": "2026-04-13",
+      "AMGN": "2026-04-13",
+      "AMZN": "2026-04-13",
+      "APP": "2026-04-13",
+      "ARM": "2026-04-13",
+      "ASML": "2026-04-13",
+      "AVGO": "2026-04-13",
+      "BKNG": "2026-04-13",
+      "CDNS": "2026-04-13",
+      "CEG": "2026-04-13",
+      "COST": "2026-04-13",
+      "CRWD": "2026-04-13",
+      "CSCO": "2026-04-13",
+      "FTNT": "2026-04-13",
+      "GILD": "2026-04-13",
+      "GOOG": "2026-04-13",
+      "GOOGL": "2026-04-13",
+      "HON": "2026-04-13",
+      "INTC": "2026-04-13",
+      "ISRG": "2026-04-13",
+      "KLAC": "2026-04-13",
+      "LIN": "2026-04-13",
+      "LRCX": "2026-04-13",
+      "MAR": "2026-04-13",
+      "META": "2026-04-13",
+      "MRVL": "2026-04-13",
+      "MSFT": "2026-04-13",
+      "MU": "2026-04-13",
+      "NFLX": "2026-04-13",
+      "NVDA": "2026-04-13",
+      "PANW": "2026-04-13",
+      "PDD": "2026-04-13",
+      "PEP": "2026-04-13",
+      "PLTR": "2026-04-13",
+      "QCOM": "2026-04-13",
+      "SBUX": "2026-04-13",
+      "SHOP": "2026-04-13",
+      "SNDK": "2026-04-13",
+      "STX": "2026-04-13",
+      "TMUS": "2026-04-13",
+      "TSLA": "2026-04-13",
+      "TXN": "2026-04-13",
+      "VRTX": "2026-04-13",
+      "WDC": "2026-04-13",
+      "WMT": "2026-04-13"
+    },
+    "target_column": "future_max_drawdown_10d",
+    "target_summary": {
+      "min": -0.0,
+      "mean": 0.03948609413664936,
+      "median": 0.0237203495630461,
+      "max": 0.9605598629909547,
+      "zero_target_share": 0.20598965320830567
+    },
+    "checks": [
+      "columns",
+      "expected_symbols",
+      "duplicate_symbol_date",
+      "iso_date",
+      "numeric_features",
+      "no_nan_features_or_target",
+      "non_negative_regression_target"
+    ]
+  },
+  "output_files": {
+    "features_targets_csv": "/Users/alexa1/Desktop/Master/DL/Deep-Learning---Neural-Networks-Project/data/processed/features_targets_nasdaq.csv",
+    "features_summary_json": "/Users/alexa1/Desktop/Master/DL/Deep-Learning---Neural-Networks-Project/outputs/metrics/features_targets_summary.json",
+    "figures": [
+      "/Users/alexa1/Desktop/Master/DL/Deep-Learning---Neural-Networks-Project/outputs/figures/data_quality_observations_by_symbol.svg",
+      "/Users/alexa1/Desktop/Master/DL/Deep-Learning---Neural-Networks-Project/outputs/figures/target_future_drawdown_distribution.svg",
+      "/Users/alexa1/Desktop/Master/DL/Deep-Learning---Neural-Networks-Project/outputs/figures/target_average_drawdown_by_symbol.svg",
+      "/Users/alexa1/Desktop/Master/DL/Deep-Learning---Neural-Networks-Project/outputs/figures/target_drawdown_over_time.svg"
+    ]
+  }
+}

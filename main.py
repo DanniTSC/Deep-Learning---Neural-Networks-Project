@@ -4,25 +4,39 @@ import argparse
 from pathlib import Path
 
 from src.config import (
+    DEFAULT_FEATURES_SUMMARY_FILE,
+    DEFAULT_FEATURES_TARGETS_FILE,
     DEFAULT_PROCESSED_FILE,
     DEFAULT_RAW_DIR,
     DEFAULT_SUMMARY_FILE,
     FIGURES_DIR,
     SELECTED_SYMBOLS,
 )
-from src.plots import write_data_quality_figures
-from src.preprocessing import (
-    preprocess_nasdaq_data,
-    validate_processed_rows,
-    write_processed_csv,
-    write_summary_json,
-)
-from src.validation import validate_processed_csv
+from src.pipeline import build_features_dataset, build_processed_dataset
+from src.validation import validate_features_targets_csv, validate_processed_csv
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Preprocess daily NASDAQ CSV files for the selected symbols."
+        description="Run the NASDAQ drawdown data pipeline."
+    )
+    parser.add_argument(
+        "--step",
+        choices=("all", "preprocess", "features"),
+        default="all",
+        help="Pipeline step to run. Default: all",
+    )
+    parser.add_argument(
+        "--processed-mode",
+        choices=("reuse", "regenerate"),
+        default="reuse",
+        help="Reuse existing processed CSV or regenerate it from raw CSV files. Default: reuse",
+    )
+    parser.add_argument(
+        "--features-mode",
+        choices=("reuse", "regenerate"),
+        default="regenerate",
+        help="Reuse existing features CSV or regenerate it from the processed CSV. Default: regenerate",
     )
     parser.add_argument(
         "--raw-dir",
@@ -31,22 +45,40 @@ def parse_args() -> argparse.Namespace:
         help=f"Directory with raw NASDAQ CSV files. Default: {DEFAULT_RAW_DIR}",
     )
     parser.add_argument(
-        "--output",
+        "--processed-output",
         type=Path,
         default=DEFAULT_PROCESSED_FILE,
-        help=f"Processed CSV output path. Default: {DEFAULT_PROCESSED_FILE}",
+        help=f"Processed CSV path. Default: {DEFAULT_PROCESSED_FILE}",
     )
     parser.add_argument(
-        "--summary-output",
+        "--processed-summary-output",
         type=Path,
         default=DEFAULT_SUMMARY_FILE,
         help=f"Preprocessing summary JSON path. Default: {DEFAULT_SUMMARY_FILE}",
     )
     parser.add_argument(
+        "--features-output",
+        type=Path,
+        default=DEFAULT_FEATURES_TARGETS_FILE,
+        help=f"Features + regression target CSV path. Default: {DEFAULT_FEATURES_TARGETS_FILE}",
+    )
+    parser.add_argument(
+        "--features-summary-output",
+        type=Path,
+        default=DEFAULT_FEATURES_SUMMARY_FILE,
+        help=f"Features + target summary JSON path. Default: {DEFAULT_FEATURES_SUMMARY_FILE}",
+    )
+    parser.add_argument(
+        "--target-horizon-days",
+        type=int,
+        default=10,
+        help="Future trading days used for max drawdown target. Default: 10",
+    )
+    parser.add_argument(
         "--symbols",
         nargs="+",
         default=list(SELECTED_SYMBOLS),
-        help="Symbols to keep from the raw NASDAQ files.",
+        help="Symbols to keep and validate.",
     )
     parser.add_argument(
         "--figures-dir",
@@ -58,7 +90,7 @@ def parse_args() -> argparse.Namespace:
         "--progress-interval",
         type=int,
         default=250,
-        help="Print progress after this many CSV files. Default: 250",
+        help="Print progress after this many raw CSV files. Default: 250",
     )
     parser.add_argument(
         "--quiet",
@@ -71,56 +103,61 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
 
-    if not args.quiet:
-        print("Starting NASDAQ preprocessing...", flush=True)
-        print(
-            "This reads thousands of daily CSV files and can take around 1-2 minutes.",
-            flush=True,
-        )
+    processed_validation, processed_rows = _run_processed_step(args)
+    if args.step == "preprocess":
+        print(f"Processed rows: {processed_rows:,}")
+        print(f"Processed validation: {processed_validation['status']}")
+        print(f"Processed CSV: {args.processed_output}")
+        return
 
-    progress_callback = None if args.quiet else _print_progress
-    result = preprocess_nasdaq_data(
+    features_validation = _run_features_step(args)
+
+    print(f"Processed rows: {processed_rows:,}")
+    print(f"Processed validation: {processed_validation['status']}")
+    print(f"Processed CSV: {args.processed_output}")
+    print(f"Features + target rows: {features_validation['rows_validated']:,}")
+    print(f"Features + target validation: {features_validation['status']}")
+    print(f"Features + target CSV: {args.features_output}")
+
+
+def _run_processed_step(args: argparse.Namespace) -> tuple[dict, int]:
+    if args.step == "features" or args.processed_mode == "reuse":
+        if not args.quiet:
+            print(f"Reusing processed OHLCV dataset: {args.processed_output}", flush=True)
+        validation = validate_processed_csv(args.processed_output, args.symbols)
+        return validation, validation["rows_validated"]
+
+    if not args.quiet:
+        print("Regenerating processed OHLCV dataset from raw CSV files...", flush=True)
+    result = build_processed_dataset(
         raw_dir=args.raw_dir,
+        output_path=args.processed_output,
+        summary_output_path=args.processed_summary_output,
+        figures_dir=args.figures_dir,
         symbols=args.symbols,
-        progress_callback=progress_callback,
+        progress_callback=None if args.quiet else _print_progress,
         progress_interval_files=args.progress_interval,
     )
+    return result["validation"], result["rows_processed"]
+
+
+def _run_features_step(args: argparse.Namespace) -> dict:
+    if args.features_mode == "reuse":
+        if not args.quiet:
+            print(f"Reusing features + target dataset: {args.features_output}", flush=True)
+        return validate_features_targets_csv(args.features_output, args.symbols)
 
     if not args.quiet:
-        print("Validating processed rows in memory...", flush=True)
-    validate_processed_rows(result.rows, expected_symbols=args.symbols)
-
-    if not args.quiet:
-        print(f"Writing processed CSV to {args.output}...", flush=True)
-    write_processed_csv(result.rows, args.output)
-
-    if not args.quiet:
-        print("Validating written CSV file...", flush=True)
-    csv_validation = validate_processed_csv(args.output, args.symbols)
-
-    if not args.quiet:
-        print(f"Generating SVG figures in {args.figures_dir}...", flush=True)
-    figure_paths = write_data_quality_figures(result.rows, args.figures_dir)
-
-    summary = dict(result.summary)
-    summary["processed_csv_validation"] = csv_validation
-    summary["output_files"] = {
-        "processed_csv": str(args.output),
-        "summary_json": str(args.summary_output),
-        "figures": [str(path) for path in figure_paths],
-    }
-
-    if not args.quiet:
-        print(f"Writing summary JSON to {args.summary_output}...", flush=True)
-    write_summary_json(summary, args.summary_output)
-
-    print(f"Processed rows: {len(result.rows):,}")
-    print(f"Validation: {csv_validation['status']}")
-    print(f"Processed CSV: {args.output}")
-    print(f"Summary JSON: {args.summary_output}")
-    print("Figures:")
-    for figure_path in figure_paths:
-        print(f"  - {figure_path}")
+        print("Regenerating drawdown regression features...", flush=True)
+    result = build_features_dataset(
+        processed_csv_path=args.processed_output,
+        output_path=args.features_output,
+        summary_output_path=args.features_summary_output,
+        figures_dir=args.figures_dir,
+        symbols=args.symbols,
+        target_horizon_days=args.target_horizon_days,
+    )
+    return result["validation"]
 
 
 def _print_progress(

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1050" height="620" viewBox="0 0 1050 620" role="img" aria-label="Distributia targetului future max drawdown 10d"><rect width="100%" height="100%" fill="#ffffff" />
+<line x1="90" y1="480" x2="940" y2="480" stroke="#334155" /><line x1="90" y1="70" x2="90" y2="480" stroke="#334155" /><line x1="90" y1="70" x2="940" y2="70" stroke="#e2e8f0" /><line x1="940" y1="70" x2="940" y2="480" stroke="#e2e8f0" />
+<text x="35.00" y="42.00" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#0f172a">Distributia targetului future max drawdown 10d</text>
+<text x="90.00" y="526.00" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#0f172a">-0.0%</text>
+<text x="885.00" y="526.00" font-family="Arial, sans-serif" font-size="13" font-weight="normal" fill="#0f172a">96.1%</text>
+<text x="25.00" y="80.00" font-family="Arial, sans-serif" font-size="12" font-weight="normal" fill="#0f172a">123.9K</text>
+<text x="42.00" y="480.00" font-family="Arial, sans-serif" font-size="12" font-weight="normal" fill="#0f172a">0</text>
+<text x="390.00" y="586.00" font-family="Arial, sans-serif" font-size="14" font-weight="normal" fill="#0f172a">Drawdown maxim viitor pe 10 zile (%)</text>
+<rect x="90.00" y="70.00" width="25.43" height="410.00" fill="#0f766e" />
+<rect x="118.43" y="332.80" width="25.43" height="147.20" fill="#0f766e" />
+<rect x="146.87" y="408.53" width="25.43" height="71.47" fill="#0f766e" />
+<rect x="175.30" y="445.15" width="25.43" height="34.85" fill="#0f766e" />
+<rect x="203.73" y="461.95" width="25.43" height="18.05" fill="#0f766e" />
+<rect x="232.17" y="470.88" width="25.43" height="9.12" fill="#0f766e" />
+<rect x="260.60" y="475.12" width="25.43" height="4.88" fill="#0f766e" />
+<rect x="289.03" y="477.37" width="25.43" height="2.63" fill="#0f766e" />
+<rect x="317.47" y="478.39" width="25.43" height="1.61" fill="#0f766e" />
+<rect x="345.90" y="479.04" width="25.43" height="0.96" fill="#0f766e" />
+<rect x="374.33" y="479.41" width="25.43" height="0.59" fill="#0f766e" />
+<rect x="402.77" y="479.68" width="25.43" height="0.32" fill="#0f766e" />
+<rect x="431.20" y="479.76" width="25.43" height="0.24" fill="#0f766e" />
+<rect x="459.63" y="479.86" width="25.43" height="0.14" fill="#0f766e" />
+<rect x="488.07" y="479.89" width="25.43" height="0.11" fill="#0f766e" />
+<rect x="516.50" y="479.89" width="25.43" height="0.11" fill="#0f766e" />
+<rect x="544.93" y="479.93" width="25.43" height="0.07" fill="#0f766e" />
+<rect x="573.37" y="479.99" width="25.43" height="0.01" fill="#0f766e" />
+<rect x="601.80" y="480.00" width="25.43" height="0.00" fill="#0f766e" />
+<rect x="630.23" y="479.99" width="25.43" height="0.01" fill="#0f766e" />
+<rect x="658.67" y="479.96" width="25.43" height="0.04" fill="#0f766e" />
+<rect x="687.10" y="479.90" width="25.43" height="0.10" fill="#0f766e" />
+<rect x="715.53" y="479.99" width="25.43" height="0.01" fill="#0f766e" />
+<rect x="743.97" y="480.00" width="25.43" height="0.00" fill="#0f766e" />
+<rect x="772.40" y="479.98" width="25.43" height="0.02" fill="#0f766e" />
+<rect x="800.83" y="479.99" width="25.43" height="0.01" fill="#0f766e" />
+<rect x="829.27" y="480.00" width="25.43" height="0.00" fill="#0f766e" />
+<rect x="857.70" y="479.97" width="25.43" height="0.03" fill="#0f766e" />
+<rect x="886.13" y="479.90" width="25.43" height="0.10" fill="#0f766e" />
+<rect x="914.57" y="479.87" width="25.43" height="0.13" fill="#0f766e" />
+</svg>
