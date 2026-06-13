@@ -21,7 +21,6 @@ data/processed/features_targets_nasdaq.csv
 
 # Model artifacts that can become large
 *.h5
-*.keras
 *.pt
 *.pth
 *.onnx
